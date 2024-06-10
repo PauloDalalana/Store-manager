@@ -10,7 +10,6 @@ const getAllSales = async () => {
   const [sales] = await connection.execute(query);
   return sales;
 };
-
 const getSaleById = async (id) => {
   const query = `
     SELECT s.date, sp.product_id AS productId, sp.quantity
@@ -29,7 +28,6 @@ const createSale = async () => {
   );
   return result.insertId;
 };
-
 const createSaleProduct = async (saleId, productId, quantity) => {
   await connection.execute(
     'INSERT INTO sales_products (sale_id, product_id, quantity) VALUES (?, ?, ?)',

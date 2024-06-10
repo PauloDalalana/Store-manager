@@ -5,7 +5,6 @@ const fetchAllSales = async (req, res) => {
   const serviceResponse = await salesService.getAllSales();
   res.status(HTTPStatus(serviceResponse.status)).json(serviceResponse.data);
 };
-
 const fetchSaleById = async (req, res) => {
   const { id } = req.params;
   const serviceResponse = await salesService.getSaleById(id);

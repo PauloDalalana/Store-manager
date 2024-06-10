@@ -1,22 +1,34 @@
 const { expect } = require('chai');
+const assert = require('assert');
 const sinon = require('sinon');
 const connection = require('../../../src/models/connection');
-const salesModel = require('../../../src/models/sales.model');
+const { salesModel } = require('../../../src/models');
 
 describe('Sales Model', function () {
-  beforeEach(function () {
+  afterEach(function () {
     sinon.restore();
   });
 
-  it('Deve retornar todas as vendas', async function () {
-    const expectedSales = [
-      { saleId: 1, date: '2021-09-09T04:54:29.000Z', productId: 1, quantity: 2 },
-      { saleId: 2, date: '2021-09-09T04:54:54.000Z', productId: 2, quantity: 3 },
-    ];
-    sinon.stub(connection, 'execute').resolves([expectedSales]);
+  it('deve buscar venda por id do DB', async function () {
+    const mockSale = { date: '2022-01-01', productId: 1, quantity: 1 };
+    sinon.stub(connection, 'execute').resolves([[mockSale]]);
 
-    const result = await salesModel.getAllSales();
+    const result = await salesModel.getSaleById(1);
+    expect(result).to.deep.equal([mockSale]);
+  });
 
-    expect(result).to.deep.equal(expectedSales);
+  it('deve retornar nulo se a venda não for encontrada pelo id do DB', async function () {
+    sinon.stub(connection, 'execute').resolves([[]]);
+
+    const result = await salesModel.getSaleById(1);
+    assert.strictEqual(result, null);
+  });
+
+  it('deve criar venda e retornar insertId', async function () {
+    const mockResult = { insertId: 1 };
+    sinon.stub(connection, 'execute').resolves([mockResult]);
+
+    const result = await salesModel.createSale();
+    expect(result).to.equal(mockResult.insertId);
   });
 });

@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const salesService = require('../../../src/services/sales.service');
-const salesModel = require('../../../src/models/sales.model');
+const { salesService } = require('../../../src/services');
+const { salesModel } = require('../../../src/models');
 
 describe('Sales Service', function () {
   beforeEach(function () {

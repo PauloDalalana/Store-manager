@@ -13,6 +13,7 @@ app.get('/', (_request, response) => {
 app.get('/products', productsController.fetchAllProducts);
 app.get('/products/:id', productsController.fetchProductById);
 app.post('/products', validateProduct, productsController.createProduct);
+app.put('/products/:id', validateProduct, productsController.updateProduct);
 
 app.get('/sales', salesController.fetchAllSales);
 app.get('/sales/:id', salesController.fetchSaleById);

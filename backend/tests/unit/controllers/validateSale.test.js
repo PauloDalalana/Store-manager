@@ -1,4 +1,4 @@
-const assert = require('assert');
+const { expect } = require('chai');
 const sinon = require('sinon');
 const validateSale = require('../../../src/middlewares/validateSale');
 
@@ -13,9 +13,9 @@ describe('Middleware validateSale', function () {
 
     validateSale(req, res, next);
 
-    assert.strictEqual(res.status.calledWith(400), true);
-    assert.strictEqual(res.json.calledWith(sinon.match({ message: '"productId" is required' })), true);
-    assert.strictEqual(next.called, false);
+    expect(res.status.calledWith(400)).to.be.equal(true);
+    expect(res.json.calledWith(sinon.match({ message: '"productId" is required' }))).to.be.equal(true);
+    expect(next.called).to.be.equal(false);
   });
 
   it('deve retornar erro 400 se o campo quantity estiver ausente', function () {
@@ -28,9 +28,9 @@ describe('Middleware validateSale', function () {
 
     validateSale(req, res, next);
 
-    assert.strictEqual(res.status.calledWith(400), true);
-    assert.strictEqual(res.json.calledWith(sinon.match({ message: '"quantity" is required' })), true);
-    assert.strictEqual(next.called, false);
+    expect(res.status.calledWith(400)).to.be.equal(true);
+    expect(res.json.calledWith(sinon.match({ message: '"quantity" is required' }))).to.be.equal(true);
+    expect(next.called).to.be.equal(false);
   });
 
   it('deve retornar erro 422 se o campo quantity for menor ou igual a 0', function () {
@@ -43,9 +43,9 @@ describe('Middleware validateSale', function () {
 
     validateSale(req, res, next);
 
-    assert.strictEqual(res.status.calledWith(422), true);
-    assert.strictEqual(res.json.calledWith(sinon.match({ message: '"quantity" must be greater than or equal to 1' })), true);
-    assert.strictEqual(next.called, false);
+    expect(res.status.calledWith(422)).to.be.equal(true);
+    expect(res.json.calledWith(sinon.match({ message: '"quantity" must be greater than or equal to 1' }))).to.be.equal(true);
+    expect(next.called).to.be.equal(false);
   });
 
   it('deve chamar o next middleware se o corpo da requisição for válido', function () {
@@ -58,8 +58,8 @@ describe('Middleware validateSale', function () {
 
     validateSale(req, res, next);
 
-    assert.strictEqual(res.status.called, false);
-    assert.strictEqual(res.json.called, false);
-    assert.strictEqual(next.called, true);
+    expect(res.status.called).to.be.equal(false);
+    expect(res.json.called).to.be.equal(false);
+    expect(next.called).to.be.equal(true);
   });
 });

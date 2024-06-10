@@ -6,7 +6,6 @@ const productSchema = Joi.object({
     'string.min': '"name" length must be at least 5 characters long',
   }),
 });
-
 const validateProduct = (req, res, next) => {
   const { error } = productSchema.validate(req.body);
   if (error) {

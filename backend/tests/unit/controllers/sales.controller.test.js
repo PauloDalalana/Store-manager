@@ -1,15 +1,31 @@
-const { assert } = require('chai');
+const { expect } = require('chai');
 const sinon = require('sinon');
-const salesController = require('../../../src/controllers/sales.controller');
-const salesService = require('../../../src/services/sales.service');
+const { salesController } = require('../../../src/controllers');
+const { salesService } = require('../../../src/services');
+const HTTPStatus = require('../../../src/utils/HTTPStatus');
 
 describe('Sales Controller', function () {
-  beforeEach(function () {
+  afterEach(function () {
     sinon.restore();
   });
 
-  it('Deve retornar o status NOT_FOUND se a venda não for encontrada', async function () {
-    const req = { params: { id: 999 } };
+  it('deve retornar todas as vendas', async function () {
+    const req = {};
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    sinon.stub(salesService, 'getAllSales').resolves({ status: 'SUCCESS', data: [] });
+
+    await salesController.fetchAllSales(req, res);
+
+    expect(res.status.calledWith(HTTPStatus('SUCCESS'))).to.be.equal(true);
+    expect(res.json.calledWith([])).to.be.equal(true);
+  });
+
+  it('deve retornar 404 quando o produto não for encontrado em fetchProductById', async function () {
+    const req = { params: { id: 1 } };
     const res = {
       status: sinon.stub().returnsThis(),
       json: sinon.stub(),
@@ -19,23 +35,7 @@ describe('Sales Controller', function () {
 
     await salesController.fetchSaleById(req, res);
 
-    assert.isTrue(res.status.calledWith(404));
-    assert.isTrue(res.json.calledWith({ message: 'Sale not found' }));
-  });
-
-  it('Deve retornar a venda com status 200 se a venda for encontrada', async function () {
-    const req = { params: { id: 1 } };
-    const res = {
-      status: sinon.stub().returnsThis(),
-      json: sinon.stub(),
-    };
-
-    const sale = { saleId: 1, date: '2021-09-09T04:54:29.000Z', productId: 1, quantity: 2 };
-    sinon.stub(salesService, 'getSaleById').resolves({ status: 'SUCCESS', data: sale });
-
-    await salesController.fetchSaleById(req, res);
-
-    assert.isTrue(res.status.calledWith(200));
-    assert.isTrue(res.json.calledWith(sale));
+    expect(res.status.calledWith(HTTPStatus('NOT_FOUND'))).to.be.equal(true);
+    expect(res.json.calledWith({ message: 'Sale not found' })).to.be.equal(true);
   });
 });

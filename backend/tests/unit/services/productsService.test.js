@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const productsModel = require('../../../src/models/products.model');
-const productsService = require('../../../src/services/products.service');
+const { productModel } = require('../../../src/models');
+const { productsService } = require('../../../src/services');
 
 describe('Products Service', function () {
   beforeEach(function () {
@@ -10,7 +10,7 @@ describe('Products Service', function () {
 
   it('deve retornar sucesso se o produto existir', async function () {
     const product = { id: 1, name: 'Martelo de Thor' };
-    sinon.stub(productsModel, 'fetchProductByIdFromDB').resolves(product);
+    sinon.stub(productModel, 'fetchProductByIdFromDB').resolves(product);
 
     const result = await productsService.checkProductExists(1);
 
@@ -19,7 +19,7 @@ describe('Products Service', function () {
   });
 
   it('deve retornar NOT_FOUND se o produto não existir', async function () {
-    sinon.stub(productsModel, 'fetchProductByIdFromDB').resolves(null);
+    sinon.stub(productModel, 'fetchProductByIdFromDB').resolves(null);
 
     const result = await productsService.checkProductExists(999);
 
@@ -28,7 +28,7 @@ describe('Products Service', function () {
   });
   it('deve cadastrar um novo produto', async function () {
     const product = { id: 4, name: 'ProdutoX' };
-    sinon.stub(productsModel, 'createProductToDB').resolves({ insertId: 4 });
+    sinon.stub(productModel, 'createProductToDB').resolves({ insertId: 4 });
 
     const result = await productsService.createProduct(product.name);
 
@@ -36,7 +36,7 @@ describe('Products Service', function () {
   });
   it('deve retornar erro se o produto não for cadastrado', async function () {
     const product = { id: 4, name: 'ProdutoX' };
-    sinon.stub(productsModel, 'createProductToDB').resolves({ insertId: null });
+    sinon.stub(productModel, 'createProductToDB').resolves({ insertId: null });
     try {
       await productsService.createProduct(product.name);
     } catch (error) {

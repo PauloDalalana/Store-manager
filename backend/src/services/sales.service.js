@@ -5,7 +5,6 @@ const getAllSales = async () => {
   const sales = await salesModel.getAllSales();
   return { status: 'SUCCESS', data: sales };
 };
-
 const getSaleById = async (id) => {
   const sale = await salesModel.getSaleById(id);
   if (!sale) {
@@ -21,7 +20,6 @@ const createSale = async (saleData) => {
   if (products.includes(null)) {
     return { status: 'NOT_FOUND', data: { message: 'Product not found' } };
   }
-
   const saleId = await salesModel.createSale();
   await Promise.all(saleData.map((item) => salesModel
     .createSaleProduct(saleId, item.productId, item.quantity)));

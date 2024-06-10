@@ -1,36 +1,39 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const connection = require('../../../src/models/connection');
-const productsModel = require('../../../src/models/products.model');
+const { productModel } = require('../../../src/models');
 
 describe('Products Model', function () {
-  beforeEach(function () {
+  afterEach(function () {
     sinon.restore();
   });
 
-  it('deve retornar todos os produtos', async function () {
-    const products = [{ id: 1, name: 'Martelo de Thor' }];
-    sinon.stub(connection, 'execute').resolves([products]);
+  it('deve buscar produto por id do DB', async function () {
+    const mockProduct = { id: 1, name: 'Produto Teste' };
+    sinon.stub(connection, 'execute').resolves([[mockProduct]]);
 
-    const result = await productsModel.fetchAllProductsFromDB();
-
-    expect(result).to.deep.equal(products);
+    const result = await productModel.fetchProductByIdFromDB(1);
+    expect(result).to.deep.equal(mockProduct);
   });
-  it('deve retornar um erro se o produto não for encontrado', async function () {
+
+  it('deve retornar nulo se o produto não for encontrado pelo id', async function () {
     sinon.stub(connection, 'execute').resolves([[]]);
 
-    try {
-      await productsModel.fetchProductByIdFromDB(999);
-    } catch (error) {
-      expect(error.message).to.equal('Product not found');
-    }
+    const result = await productModel.fetchProductByIdFromDB(1);
+    expect(result).to.be.equal(null);
   });
-  it('deve retornar o produto se o produto for encontrado', async function () {
-    const product = { id: 1, name: 'Martelo de Thor' };
-    sinon.stub(connection, 'execute').resolves([[product]]);
 
-    const result = await productsModel.fetchProductByIdFromDB(1);
+  it('deve atualizar o produto no DB e retornar verdadeiro', async function () {
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
 
-    expect(result).to.deep.equal(product);
+    const result = await productModel.updateProductInDB(1, 'Produto Atualizado');
+    expect(result).to.be.equal(true);
+  });
+
+  it('deve retornar falso se a atualização do produto no DB não for bem-sucedida', async function () {
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: 0 }]);
+
+    const result = await productModel.updateProductInDB(1, 'Produto Atualizado');
+    expect(result).to.be.equal(false);
   });
 });

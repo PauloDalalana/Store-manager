@@ -4,7 +4,6 @@ const fetchAllProductsFromDB = async () => {
   const [products] = await connection.execute('SELECT * FROM products ORDER BY id ASC');
   return products;
 };
-
 const fetchProductByIdFromDB = async (id) => {
   const [product] = await connection.execute('SELECT * FROM products WHERE id = ?', [id]);
   return product.length ? product[0] : null;
@@ -16,9 +15,17 @@ const createProductToDB = async (name) => {
   );
   return result;
 };
+const updateProductInDB = async (id, name) => {
+  const [result] = await connection.execute(
+    'UPDATE products SET name = ? WHERE id = ?',
+    [name, id],
+  );
+  return result.affectedRows > 0;
+};
 
 module.exports = {
   fetchAllProductsFromDB,
   fetchProductByIdFromDB,
   createProductToDB,
+  updateProductInDB,
 };
