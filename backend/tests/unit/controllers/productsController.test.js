@@ -53,4 +53,18 @@ describe('Products Controller', function () {
     expect(res.status.calledWith(HTTPStatus('NOT_FOUND'))).to.be.equal(true);
     expect(res.json.calledWith({ message: 'Product not found' })).to.be.equal(true);
   });
+
+  it('deve retornar 204 se o produto for deletado com sucesso', async function () {
+    const req = { params: { id: 1 } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      end: sinon.stub(),
+    };
+    sinon.stub(productsService, 'deleteProduct').resolves({ status: 'NO_CONTENT', data: null });
+
+    await productsController.deleteProduct(req, res);
+
+    expect(res.status.calledWith(204)).to.be.equal(true);
+    expect(res.end.calledOnce).to.be.equal(true);
+  });
 });

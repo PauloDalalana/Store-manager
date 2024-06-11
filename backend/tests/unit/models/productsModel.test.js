@@ -36,4 +36,16 @@ describe('Products Model', function () {
     const result = await productModel.updateProductInDB(1, 'Produto Atualizado');
     expect(result).to.be.equal(false);
   });
+  it('deve deletar o produto do DB e retornar verdadeiro', async function () {
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
+
+    const result = await productModel.deleteProductFromDB(1);
+    expect(result).to.be.equal(true);
+  });
+  it('deve retornar falso se a exclusão do produto do DB não for bem-sucedida', async function () {
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: 0 }]);
+
+    const result = await productModel.deleteProductFromDB(1);
+    expect(result).to.be.equal(false);
+  });
 });

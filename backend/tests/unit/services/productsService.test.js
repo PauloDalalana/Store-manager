@@ -43,4 +43,13 @@ describe('Products Service', function () {
       expect(error.message).to.equal('Product not created');
     }
   });
+  it('deve deletar um produto', async function () {
+    sinon.stub(productModel, 'fetchProductByIdFromDB').resolves({ id: 1, name: 'ProdutoX' });
+    sinon.stub(productModel, 'deleteProductFromDB').resolves(true);
+
+    const result = await productsService.deleteProduct(1);
+
+    expect(result.status).to.equal('NO_CONTENT');
+    expect(result.data).to.equal(null);
+  });
 });
