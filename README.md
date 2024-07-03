@@ -27,5 +27,6 @@ utilizando várias tecnologias de backend e segue boas práticas de desenvolvime
 - **Chai**: Biblioteca de asserções para testes.
 - **Sinon**: Biblioteca de mocks, stubs e spies para testes.
 
-## Projeto desenvolvido por: [Paulo Dalalana](https://github.com/PauloDalalana)
+## Projeto desenvolvido por:
+[Paulo Dalalana](https://github.com/PauloDalalana)
 LinkedIn: [Paulo Dalalana](https://www.linkedin.com/in/paulodalalana/)
